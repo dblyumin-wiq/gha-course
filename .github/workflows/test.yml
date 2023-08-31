@@ -7,7 +7,9 @@ jobs:
             - name: Get code
               uses: actions/checkout@v3
             - name: Change dir
-              run: cd second-action-react-demo
+              run: | 
+                cd second-action-react-demo
+                echo $(pwd)
             - name: Install NodeJS
               uses: actions/setup-node@v3
               with:
