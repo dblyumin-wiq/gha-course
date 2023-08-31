@@ -5,5 +5,12 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Get code
-              run: echo 'foo'
-            
+              uses: actions/checkout@v3
+            - name: Install NodeJS
+              uses: actions/setup-node@v3
+              with:
+                node-version: '18'
+            - name: Install project's NodeJS dependencies
+              run: npm ci
+            - name: Run tests
+              run: npm test
