@@ -5,4 +5,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Output GitHub context
+        # github object is provided by GitHub at run time
+        # ${{...}} indicates access to a contexts' element
         run: echo "${{toJson(github)}}"
