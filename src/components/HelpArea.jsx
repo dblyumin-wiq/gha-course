@@ -1,5 +1,6 @@
 import HelpBox from './HelpBox';
 import './HelpArea.css';
+import React from 'react';
 
 const HELP_ITEMS = [
   {
