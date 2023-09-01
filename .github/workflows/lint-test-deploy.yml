@@ -12,7 +12,7 @@ jobs:
           node-version: "18" 
       - name: install deps
         run: npm ci
-      - name: run linting
+      - name: Lint
         run: npm run lint
   test:
     needs: lint
@@ -26,7 +26,28 @@ jobs:
           node-version: "18" 
       - name: install deps
         run: npm ci
-      - name: run tests
-        run: npm lint
+      - name: Test
+        run: npm run test
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    steps: 
+      - name: get repo code
+        uses: actions/checkout@v3
+      - name: install NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18" 
+      - name: install deps
+        run: npm ci
+      - name: Build
+        run: npm run build
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: deploy
+        run: echo "Deploying"
+
 
       
