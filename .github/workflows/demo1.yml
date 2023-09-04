@@ -8,8 +8,9 @@ on:
       - "main"
   push:
     branches:
+      #   * - any char except '/'  |  ** - any char
       - "main"
-      - "feature/**"  #   * - any char except '/'  |  ** - any char
+      - "feature/**"
     paths-ignore:
       - ".github/workflows/*"
 jobs:
