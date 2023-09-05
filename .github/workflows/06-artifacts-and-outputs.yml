@@ -18,6 +18,7 @@ jobs:
   build:
     needs: test
     runs-on: ubuntu-latest
+    # declare k:v for output values
     outputs:
       script-file: ${{ steps.publish.outputs.js-file}}
     steps:
@@ -27,8 +28,10 @@ jobs:
         run: npm ci
       - name: Build website
         run: npm run build
+      # example on how to store a value in an output var
       - name: Publish JS file name
         id: publish
+        # results of echo command are stored in GitHub-provisioned env var
         run: find dist/assets/*.js -type f -execdir echo 'js-file={}' >> $GITHUB_OUTPUT ';'
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
@@ -47,7 +50,10 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: dist-files
-      - name: List contents
+      - name: List artifact contents
         run: ls
+      # access output var from another job, declared in 'needs' clause
+      - name: List output var
+        run: echo "${{ needs.build.outputs.script-file }}"
       - name: Deploy
         run: echo "Deploying..."
