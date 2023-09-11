@@ -1,20 +1,20 @@
 name: Events Demo 1
 on:
   workflow_dispatch: 
-  pull_request:
-    types:
-      - opened
-    branches: 
-      - "main"
-  push:
-    # filters
-    branches:
-      #   * - any char except '/'  |  ** - any char
-      - "main"
-      - "dev"
-      - "feature/**"
-    paths-ignore:
-      - ".github/workflows/*"
+  # pull_request:
+  #   types:
+  #     - opened
+  #   branches: 
+  #     - "main"
+  # push:
+  #   # filters
+  #   branches:
+  #     #   * - any char except '/'  |  ** - any char
+  #     - "main"
+  #     - "dev"
+  #     - "feature/**"
+  #   paths-ignore:
+  #     - ".github/workflows/*"
 jobs:
   deploy:
     runs-on: ubuntu-latest
