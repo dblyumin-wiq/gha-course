@@ -36,7 +36,9 @@ jobs:
         id: run-tests
         run: npm run test
       - name: Upload test report
-        # for 'if' operator, no need to wrap expressions into ${{...}}
+        # For 'if' operator, no need to wrap expressions into ${{...}}.
+        # Default behaviour is to skip downstream steps on upstream failure,
+        #   so we need to add the 'failure()' condition to override this.
         if: failure() && steps.run-tests.outcome == 'failure'
         uses: actions/upload-artifact@v3
         with:
