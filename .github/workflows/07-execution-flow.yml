@@ -37,7 +37,7 @@ jobs:
         run: npm run test
       - name: Upload test report
         # for 'if' operator, no need to wrap expressions into ${{...}}
-        if: steps.run-tests.outcome == 'failure'
+        if: failure() && steps.run-tests.outcome == 'failure'
         uses: actions/upload-artifact@v3
         with:
           name: test-report
