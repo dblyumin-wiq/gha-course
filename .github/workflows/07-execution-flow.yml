@@ -78,3 +78,9 @@ jobs:
         run: ls
       - name: Deploy
         run: echo "Deploying..."
+  report:
+    runs-on: ubuntu-latest
+    if: failure()
+    steps:
+      - name: report
+        run: echo "Something failed upstream..."
