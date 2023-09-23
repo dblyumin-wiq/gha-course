@@ -28,9 +28,11 @@ jobs:
         id: cache
         uses: actions/cache@v3
         with:
-          path: ~/.npm
+          path: node_modules
           key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
+        # only run install if cache hit did not occur
+        if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
       - name: Test code
         id: run-tests
@@ -78,7 +80,7 @@ jobs:
         run: ls
       - name: Deploy
         run: echo "Deploying..."
-  report:
+  report-failures:
     runs-on: ubuntu-latest
     needs: [lint, deploy]
     if: failure()
