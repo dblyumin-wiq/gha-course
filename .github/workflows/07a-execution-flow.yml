@@ -1,4 +1,4 @@
-name: 07 Website Deployment
+name: 07a Website Deployment
 on:
   push:
     branches:
