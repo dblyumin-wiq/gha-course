@@ -1,9 +1,24 @@
 name: 07 Reusable workflow
 # runs when called by another workflow
-on: workflow_call
+on: 
+  workflow_call:
+    # specify inputs expected to be received
+    inputs:
+      artifact-name:
+        description: The name of deployable artifact
+        type: string
+        required: false
+        default: dist
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: Get code
+        uses: actions/download-artifact@v3
+        with:
+          # use the input var
+          name: ${{ inputs.artifact-name }}
+      - name: List files
+        run: ls ${{ inputs.artifact-name }}
       - name: Output info
         run: echo "Deploying & uploading..."
