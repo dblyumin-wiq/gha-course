@@ -19,6 +19,6 @@ jobs:
           # use the input var
           name: ${{ inputs.artifact-name }}
       - name: List files
-        run: ls ${{ inputs.artifact-name }}
+        run: ls 
       - name: Output info
         run: echo "Deploying & uploading..."
