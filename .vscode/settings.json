@@ -1,0 +1,16 @@
+{
+    "sqltools.useNodeRuntime": true,
+    "sqltools.connections": [
+        {
+            "name": "mem-db",
+            "accessMode": "Read Only",
+            "previewLimit": 50,
+            "driver": "DuckDB",
+            "group": "test",
+            "databaseFilePath": ":memory:"
+        }
+    ],
+    "files.associations": {
+        "*.yml": "yaml"
+    },
+}
