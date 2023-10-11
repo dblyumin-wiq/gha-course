@@ -12,6 +12,9 @@ jobs:
       # custom action, GHA automatically looks for action.yaml file in the specified dir (relative to root)
       - name: Load and cache dependencies
         uses: ./.github/actions/cached-deps
+        # switch off caching, just for demo
+        with:
+          caching-on: 'false'
       - name: Lint code
         run: npm run lint
   test:
