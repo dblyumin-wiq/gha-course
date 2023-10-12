@@ -8,7 +8,7 @@ inputs:
 outputs:
   cache-used:
     description: 'Cache was used successfully.'
-    value: ${{ steps.install-deps.cache-used }}
+    value: ${{ steps.install-deps.cache }}
 runs:
   using: composite
   steps:
@@ -25,5 +25,5 @@ runs:
       # just for demo, mirror the input value to the output
       run: |
         npm ci
-        echo "cache-used='${{ inputs.caching-on }}'" >> $GITHUB_OUTPUT
+        echo "cache='${{ inputs.caching-on }}'" >> $GITHUB_OUTPUT
       shell: bash
