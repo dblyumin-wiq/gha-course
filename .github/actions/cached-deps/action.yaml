@@ -8,7 +8,8 @@ inputs:
 outputs:
   cache-used:
     description: 'Cache was used successfully.'
-    value: ${{ steps.install-deps.cache }}
+    # value: ${{ steps.install-deps.cache }}
+    value: foo
 runs:
   using: composite
   steps:
