@@ -6,4 +6,4 @@ function run() {
     core.notice('Hello from the custom JS action!');
 }
 
-run;
+run();
