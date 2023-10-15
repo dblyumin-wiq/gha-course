@@ -2,4 +2,4 @@ name: 'Deploy to the cloud'
 description: 'Deploy website to the cloud for hosting'
 runs:
   using: 'node16'
-  main: 'node.js'
+  main: 'main.js'
