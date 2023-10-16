@@ -1,5 +1,17 @@
 name: 'Deploy to the cloud'
 description: 'Deploy website to the cloud for hosting'
+inputs:
+  bucket:
+    description: 'The hosting bucket ID'
+    required: true
+  bucket-region:
+    description: 'Hosting bucket region'
+    required: false
+    default: ap-southeast-2
+  dist-folder:
+    description: 'Deployable files location'
+    required: true
+
 runs:
   using: 'node16'
   main: 'main.js'
