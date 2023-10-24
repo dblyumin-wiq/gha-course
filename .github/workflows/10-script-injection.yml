@@ -1,0 +1,32 @@
+name: Label Issues (Script Injection Example)
+on:
+  issues:
+    types:
+      - opened
+jobs:
+  assign-label:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Assign label
+        # the issue title can be constructed in such a way that
+        # that this 'run' command will execute arbitrary code,
+        # e.g. foo";echo 'Bad stuff happens now...'"
+        # where " closes the opening quote and completes the issue.title value,
+        # ; starts a new command,
+        # for example, sending access keys from auto-provisioned env vars
+        #
+        # FIX:
+        # store 'title' in an env var, i.e. already expanded by the shell,
+        # thus avoiding the execution of some code in the 'run' block
+        # 
+        env:
+          TITLE: "${{ github.event.issue.title }}"
+        # run: |
+        #   issue_title="${{ github.event.issue.title }}"
+        #   if [[ "$issue_title" == *"bug"* ]]; then
+        run:
+          if [[ "$TITLE" == *"bug"* ]]; then
+          echo "Issue is about a bug!"
+          else
+          echo "Issue is not about a bug"
+          fi
