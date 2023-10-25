@@ -24,7 +24,7 @@ jobs:
         # run: |
         #   issue_title="${{ github.event.issue.title }}"
         #   if [[ "$issue_title" == *"bug"* ]]; then
-        run:
+        run: |
           if [[ "$TITLE" == *"bug"* ]]; then
           echo "Issue is about a bug!"
           else
