@@ -5,6 +5,10 @@ on:
       - opened
 jobs:
   assign-label:
+    # restrict access to issues API only, for extra security
+    # default is access to all, but if any are specified here, default is set to none
+    permissions:
+      issues: write
     runs-on: ubuntu-latest
     steps:
       - name: Assign label
