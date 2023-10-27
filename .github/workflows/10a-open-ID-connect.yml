@@ -82,7 +82,6 @@ jobs:
           aws-region: ap-southeast-2
       - name: Deploy site
         id: deploy
-        # uses: ./.github/actions/deploy-s3-javascript
         uses: ./.github/actions/deploy-s3-docker
         with:
           bucket: d2569578-6273-4217-8436-c80b741ac8d9
