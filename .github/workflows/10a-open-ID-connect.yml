@@ -75,7 +75,7 @@ jobs:
         run: ls
       # use OIDC to access S3
       - name: Get AWS permissions
-        uses: aws-actions/configure-aws-credentials
+        uses: aws-actions/configure-aws-credentials@v4.0.1
         with:
           # ARN from the role provisioned in AWS IAM
           role-to-assume: arn:aws:iam::000549978797:role/GHA-course-upload-to-S3
