@@ -33,7 +33,7 @@ jobs:
       - name: Set matrix array
         id: set-matrix
         run: |
-          echo ${ALL_CHANGED_FILES}
+          echo ${ALL_CHANGED_FILES} && \
           MATRIX=()
           for file in ${ALL_CHANGED_FILES}; do
           if [[ "$file" == *"foo_dev.txt" ]]; then
@@ -41,9 +41,9 @@ jobs:
           elif [[ "$file" == *"foo_test.txt" ]]; then
             MATRIX+=("test")
           fi
-          done
-          echo "matrix=$(IFS=,; echo "${MATRIX[*]}")" >> $GITHUB_ENV
-          echo "$(IFS=,; echo "${MATRIX[*]}")" 
+          done 
+          echo "matrix=$(IFS=,; echo "${MATRIX[*]}")" >> $GITHUB_ENV && \
+          echo "$(IFS=,; echo "${MATRIX[*]}")" && \
           echo $MATRIX
 
   deploy-to-env:
