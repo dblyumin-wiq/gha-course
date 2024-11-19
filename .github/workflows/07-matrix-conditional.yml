@@ -20,31 +20,25 @@ jobs:
         id: changed-files
         uses: tj-actions/changed-files@v45
         with:
+          files: |
+            'dummy/**'
+          separator: ','
           since_last_remote_commit: true
 
       - name: List all changed files
         env:
           ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
         run: |
-          for file in ${ALL_CHANGED_FILES}; do
-            echo "$file was changed"
-          done
+          echo "All changed files: $ALL_CHANGED_FILES"
+          # for file in ${ALL_CHANGED_FILES}; do
+          #   echo "$file was changed"
+          # done
       
       - name: Set matrix array
         id: set-matrix
         run: |
-          echo ${ALL_CHANGED_FILES} && \
-          MATRIX=()
-          for file in ${ALL_CHANGED_FILES}; do
-          if [[ "$file" == *"foo_dev.txt" ]]; then
-            MATRIX+=("dev")
-          elif [[ "$file" == *"foo_test.txt" ]]; then
-            MATRIX+=("test")
-          fi
-          done 
-          echo "matrix=$(IFS=,; echo "${MATRIX[*]}")" >> $GITHUB_ENV && \
-          echo "$(IFS=,; echo "${MATRIX[*]}")" && \
-          echo $MATRIX
+          ALL_CHANGED_FILES_ARRAY=(${ALL_CHANGED_FILES//,/ })
+          echo "matrix=${ALL_CHANGED_FILES_ARRAY[@]}" >> "$GITHUB_OUTPUT"
 
   deploy-to-env:
     runs-on: ubuntu-latest
