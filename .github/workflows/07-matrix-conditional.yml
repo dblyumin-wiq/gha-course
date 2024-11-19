@@ -42,6 +42,7 @@ jobs:
           fi
           done
           echo "matrix=$(IFS=,; echo "${MATRIX[*]}")" >> $GITHUB_ENV
+          echo "$(IFS=,; echo "${MATRIX[*]}")" 
 
   deploy-to-env:
     runs-on: ubuntu-latest
