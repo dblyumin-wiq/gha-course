@@ -21,15 +21,25 @@ jobs:
         uses: tj-actions/changed-files@v45
         with:
           since_last_remote_commit: true
-          separator: ','
 
       - name: Set matrix array
         id: set-matrix
         env:
           ALL_MODIFIED_FILES: ${{ steps.changed-files.outputs.modified_files }}
         run: |
-          MODIFIED_FILES_JSON=$(echo "[\"${ALL_MODIFIED_FILES//,/\",\"}\" | sed 's:.*/::g']")
-          echo "pde_envs=$MODIFIED_FILES_JSON" >> $GITHUB_OUTPUT
+          files=()
+          for file in ${ALL_MODIFIED_FILES}; do
+            echo "File modified: $file"
+            file_name=$(echo "${file}" | sed 's:.*/::g' | sed 's:\.[^.]*$::g'
+            files+=("${file_name}")
+          done
+          files_json=$(printf '%s\n' "${files[@]}" | jq -R . | jq -s .)
+          echo "pde_envs=$files_json" >> $GITHUB_OUTPUT
+
+          # FILE_NAMES=$(echo "${ALL_MODIFIED_FILES}" | sed 's:.*/::g' | sed 's:\.[^.]*$::g')
+          # MODIFIED_FILES_JSON=$(echo "[\"${ALL_MODIFIED_FILES//,/\",\"}\")
+          # echo "pde_envs=$MODIFIED_FILES_JSON" >> $GITHUB_OUTPUT
+
 
 
       - name: List modified files
@@ -55,8 +65,8 @@ jobs:
     env:
       params: |
         {
-          "foo_dev.txt": "dev",
-          "foo_test.txt": "test",
+          "foo_dev": "dev",
+          "foo_test": "test",
         }
 
     steps:
@@ -67,3 +77,4 @@ jobs:
       - name: Echo env
         run: |
           echo "PDE_ENV=${{ matrix.pde_env }}"
+          echo "ENV is: ${{ env.params.foo_dev}}"
