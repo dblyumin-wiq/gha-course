@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      pde-envs: ${{ steps.set-matrix.outputs.matrix }}
+      pde-envs: ${{ steps.set-matrix.outputs.pde_envs }}
 
     steps:
       - name: Checkout
@@ -22,23 +22,16 @@ jobs:
         with:
           files: |
             'dummy/**'
-          separator: ','
           since_last_remote_commit: true
 
-      - name: List all changed files
-        env:
-          ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
-        run: |
-          echo "All changed files: $ALL_CHANGED_FILES"
-          # for file in ${ALL_CHANGED_FILES}; do
-          #   echo "$file was changed"
-          # done
-      
       - name: Set matrix array
         id: set-matrix
+        env:
+          ALL_MODIFIED_FILES: ${{ steps.changed-files.outputs.modified_files }}
         run: |
-          ALL_CHANGED_FILES_ARRAY=(${ALL_CHANGED_FILES//,/ })
-          echo "matrix=${ALL_CHANGED_FILES_ARRAY[@]}" >> "$GITHUB_OUTPUT"
+          echo ${{ env.ALL_MODIFIED_FILES }}
+          echo 'pde_envs=${{ env.ALL_MODIFIED_FILES }}' >> "$GITHUB_OUTPUT""
+
 
   deploy-to-env:
     runs-on: ubuntu-latest
