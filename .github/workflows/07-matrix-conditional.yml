@@ -6,32 +6,19 @@ on:
       - '.github/workflows/07-matrix-conditional.yml'
 
 jobs:
-  build:
+  define-matrix:
     runs-on: ubuntu-latest
-    continue-on-error: true
-    # strategy:
-    #   matrix:
-    #     # all permutations will be used
-    #     operating-system: [ubuntu-latest, windows-latest]
-    #     node-version: [12, 14, 16]
-    #     # the specific combination will be used in addition to above
-    #     include:
-    #       - operating-system: ubuntu-latest
-    #         node-version: 18
-    #     # the specific combination will be excluded from permutations
-    #     exclude:
-    #       - operating-system: windows-latest
-    #         node-version: 12
-    # runs-on: ${{ matrix.operating-system }}
-    steps:
 
+    outputs:
+      pde-envs: ${{ steps.set-matrix.outputs.matrix }}
+
+    steps:
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Get changed files
         id: changed-files
         uses: tj-actions/changed-files@v45
-        # To compare changes between the current commit and the last pushed remote commit set `since_last_remote_commit: true`. e.g
         with:
           since_last_remote_commit: true
 
@@ -42,3 +29,37 @@ jobs:
           for file in ${ALL_CHANGED_FILES}; do
             echo "$file was changed"
           done
+      
+      - name: Set matrix array
+        id: set-matrix
+        run: |
+          MATRIX=()
+          for file in ${ALL_CHANGED_FILES}; do
+          if [[ "$file" == *"foo_dev.txt" ]]; then
+            MATRIX+=("dev")
+          elif [[ "$file" == *"foo_test.txt" ]]; then
+            MATRIX+=("test")
+          fi
+          done
+          echo "matrix=$(IFS=,; echo "${MATRIX[*]}")" >> $GITHUB_ENV
+
+  deploy-to-env:
+    runs-on: ubuntu-latest
+    needs: define-matrix
+    continue-on-error: true
+    strategy:
+      matrix:
+        pde_env: ${{ fromJSON(needs.define-matrix.outputs.pde-envs) }}
+        # env: [
+        #   dev: {PDE_ENV: dev, DATA_FILE: '${{ github.workspace }}/dummy/foo_dev.txt'},
+        #   test: {PDE_ENV: test, DATA_FILE: '${{ github.workspace }}/dummy/foo_test.txt'},
+        # ]
+    
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Echo env
+        run: |
+          echo "PDE_ENV=${{ matrix.pde_env }}"
