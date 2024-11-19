@@ -21,17 +21,16 @@ jobs:
         uses: tj-actions/changed-files@v45
         with:
           since_last_remote_commit: true
+          separator: ','
 
       - name: Set matrix array
         id: set-matrix
         env:
           ALL_MODIFIED_FILES: ${{ steps.changed-files.outputs.modified_files }}
         run: |
-          MODIFIED_FILES_ARRAY=()
-          for file in ${ALL_MODIFIED_FILES}; do
-            MODIFIED_FILES_ARRAY+=("$file")
-          done
-          echo "pde_envs=${MODIFIED_FILES_ARRAY[@]}" >> "$GITHUB_OUTPUT"
+          MODIFIED_FILES_JSON=$(echo "[\"${ALL_MODIFIED_FILES//,/\",\"}\"]")
+          echo "pde_envs=$MODIFIED_FILES_JSON" >> $GITHUB_OUTPUT
+
 
       - name: List modified files
         env:
@@ -47,7 +46,7 @@ jobs:
     continue-on-error: true
     strategy:
       matrix:
-        pde_env: ${{ needs.define-matrix.outputs.pde-envs }}
+        pde_env: ${{ fromJson(needs.define-matrix.outputs.pde-envs) }}
         # env: [
         #   dev: {PDE_ENV: dev, DATA_FILE: '${{ github.workspace }}/dummy/foo_dev.txt'},
         #   test: {PDE_ENV: test, DATA_FILE: '${{ github.workspace }}/dummy/foo_test.txt'},
