@@ -3,7 +3,7 @@ on:
   push:
     paths:
       - 'dummy/**'
-      # - '.github/workflows/07a-matrix-conditional.yml'
+      - '.github/workflows/07-matrix-conditional.yml'
 
 jobs:
   build:
