@@ -1,0 +1,40 @@
+name: Matrix Conditional
+on:
+  push:
+    paths:
+      - 'dummy/**'
+      # - '.github/workflows/07a-matrix-conditional.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    # strategy:
+    #   matrix:
+    #     # all permutations will be used
+    #     operating-system: [ubuntu-latest, windows-latest]
+    #     node-version: [12, 14, 16]
+    #     # the specific combination will be used in addition to above
+    #     include:
+    #       - operating-system: ubuntu-latest
+    #         node-version: 18
+    #     # the specific combination will be excluded from permutations
+    #     exclude:
+    #       - operating-system: windows-latest
+    #         node-version: 12
+    # runs-on: ${{ matrix.operating-system }}
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Get changed files
+        uses: tj-actions/changed-files@v45
+
+      - name: List all changed files
+        env:
+          ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
+        run: |
+          for file in ${ALL_CHANGED_FILES}; do
+            echo "$file was changed"
+          done
