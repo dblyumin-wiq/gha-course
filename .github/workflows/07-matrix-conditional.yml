@@ -28,7 +28,7 @@ jobs:
         env:
           ALL_MODIFIED_FILES: ${{ steps.changed-files.outputs.modified_files }}
         run: |
-          MODIFIED_FILES_JSON=$(echo "[\"${ALL_MODIFIED_FILES//,/\",\"}\"]")
+          MODIFIED_FILES_JSON=$(echo "[\"${ALL_MODIFIED_FILES//,/\",\"}\" | sed 's:.*/::g']")
           echo "pde_envs=$MODIFIED_FILES_JSON" >> $GITHUB_OUTPUT
 
 
@@ -52,6 +52,13 @@ jobs:
         #   test: {PDE_ENV: test, DATA_FILE: '${{ github.workspace }}/dummy/foo_test.txt'},
         # ]
     
+    env:
+      params: |
+        {
+          "foo_dev.txt": "dev",
+          "foo_test.txt": "test",
+        }
+
     steps:
 
       - name: Checkout
