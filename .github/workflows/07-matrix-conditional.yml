@@ -29,8 +29,11 @@ jobs:
         env:
           ALL_MODIFIED_FILES: ${{ steps.changed-files.outputs.modified_files }}
         run: |
-          echo ${{ env.ALL_MODIFIED_FILES }}
-          echo 'pde_envs=${{ env.ALL_MODIFIED_FILES }}' >> "$GITHUB_OUTPUT"
+          MODIFIED_FILES_ARRAY=()
+          for file in $ALL_MODIFIED_FILES; do
+            MODIFIED_FILES_ARRAY+=("$file")
+          done
+          echo "pde_envs=${MODIFIED_FILES_ARRAY[@]}" >> "$GITHUB_OUTPUT"
 
 
   deploy-to-env:
