@@ -21,16 +21,9 @@ jobs:
         uses: tj-actions/changed-files@v45
         with:
           since_last_remote_commit: true
+          separator: ','
           files: |
             dummy/**
-
-      - name: List modified files
-        env:
-          ALL_MODIFIED_FILES: ${{ steps.changed-files.outputs.modified_files }}
-        run: |
-          for file in ${ALL_MODIFIED_FILES}; do
-            echo "File modified: $file"
-          done
 
       - name: Set matrix array
         id: set-matrix
@@ -65,4 +58,4 @@ jobs:
       - name: Echo env
         run: |
           echo "Data file: ${{ matrix.data_file }}"
-          echo "GHA_ENV: ${{ env.GHA_ENV }}"
+          echo "${{ env.GHA_ENV }}"
