@@ -1,3 +1,9 @@
 
+files=()
+          for file in ${ALL_MODIFIED_FILES}; do
+            file_name=$(echo "${file}" | sed 's:.*/::g' | sed 's:\.[^.]*$::g')
+            files+=("${file_name}")
+          done
+          files_json=$(printf '%s\n' "${files[@]}" | jq -R . | jq -s .)
 
 # MODIFIED_FILES_JSON=$(echo "[\"${ALL_MODIFIED_FILES//,/\",\"}\")
