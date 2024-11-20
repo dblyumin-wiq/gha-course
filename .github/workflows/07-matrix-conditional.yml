@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      pde-envs: ${{ steps.set-matrix.outputs.pde_envs }}
+      pde_envs: ${{ steps.set-matrix.outputs.pde_envs }}
 
     steps:
       - name: Checkout
@@ -40,7 +40,7 @@ jobs:
             file_name=$(echo "${file}" | sed 's:.*/::g' | sed 's:\.[^.]*$::g')
             files+=("${file_name}")
           done
-          files_json=$(printf '%s\n' "${files[@]}" | jq -R . | jq -s -c .)
+          files_json=$(printf '%s\n' "${files[@]}" | jq -R . | jq -s )
           echo $files_json
           echo 'pde_envs=$files_json' >> "$GITHUB_OUTPUT"
 
@@ -52,7 +52,7 @@ jobs:
     continue-on-error: true
     strategy:
       matrix:
-        pde_env: ${{ fromJson(needs.define-matrix.outputs.pde-envs) }}
+        pde_env: ${{ fromJson(needs.define-matrix.outputs.pde_envs) }}
         # env: [
         #   dev: {PDE_ENV: dev, DATA_FILE: '${{ github.workspace }}/dummy/foo_dev.txt'},
         #   test: {PDE_ENV: test, DATA_FILE: '${{ github.workspace }}/dummy/foo_test.txt'},
