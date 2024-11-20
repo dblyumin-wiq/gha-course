@@ -35,7 +35,7 @@ jobs:
           done
           filenames_json=$(echo "${filenames[@]}" | jq -R 'split(" ")')
           echo $filenames_json
-          echo "pde_envs=${filenames_json}" >> "$GITHUB_OUTPUT"
+          echo "pde_envs=$filenames_json" >> $GITHUB_OUTPUT
 
 
       - name: List modified files
