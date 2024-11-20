@@ -59,6 +59,14 @@ jobs:
         #   dev: {PDE_ENV: dev, DATA_FILE: '${{ github.workspace }}/dummy/foo_dev.txt'},
         #   test: {PDE_ENV: test, DATA_FILE: '${{ github.workspace }}/dummy/foo_test.txt'},
         # ]
+
+    env:
+      GHA_ENV: >
+        ${{ 
+          matrix.pde_env == 'foo_dev' && 'dev' || 
+          matrix.pde_env == 'foo_test' && 'test' || 
+          'unknown' 
+        }}
     
     steps:
 
@@ -68,3 +76,4 @@ jobs:
       - name: Echo env
         run: |
           echo "PDE_ENV=${{ matrix.pde_env }}"
+          echo "GHA_ENV=${{ env.GHA_ENV }}"
