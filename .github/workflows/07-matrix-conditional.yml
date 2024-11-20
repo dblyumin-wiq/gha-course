@@ -33,7 +33,7 @@ jobs:
             filename_without_ext="${filename%.*}"
             filenames+=("$filename_without_ext")
           done
-          filenames_json=$(echo "${filenames[@]}" | jq -R 'split(" ")')
+          filenames_json=$(echo "${filenames[@]}" | jq -Rc 'split(" ")')
           echo $filenames_json
           echo "pde_envs=$filenames_json" >> $GITHUB_OUTPUT
 
