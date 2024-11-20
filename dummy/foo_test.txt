@@ -1,1 +1,2 @@
+
 FILE_NAMES=$(echo "${ALL_MODIFIED_FILES}" | sed 's:.*/::g' | sed 's:\.[^.]*$::g'

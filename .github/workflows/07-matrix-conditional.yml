@@ -41,6 +41,7 @@ jobs:
             files+=("${file_name}")
           done
           files_json=$(printf '%s\n' "${files[@]}" | jq -R . | jq -s .)
+          echo $files_json
           echo 'pde_envs=$files_json' >> "$GITHUB_OUTPUT"
 
 
