@@ -21,6 +21,14 @@ jobs:
         uses: tj-actions/changed-files@v45
         with:
           since_last_remote_commit: true
+      
+      - name: List modified files
+        env:
+          ALL_MODIFIED_FILES: ${{ steps.changed-files.outputs.modified_files }}
+        run: |
+          for file in ${ALL_MODIFIED_FILES}; do
+            echo "File modified: $file"
+          done
 
       - name: Set matrix array
         id: set-matrix
@@ -33,15 +41,9 @@ jobs:
             files+=("${file_name}")
           done
           files_json=$(printf '%s\n' "${files[@]}" | jq -R . | jq -s .)
-          echo "pde_envs=$files_json" >> $GITHUB_OUTPUT
+          echo 'pde_envs=$files_json' >> "$GITHUB_OUTPUT"
 
-      - name: List modified files
-        env:
-          ALL_MODIFIED_FILES: ${{ steps.changed-files.outputs.modified_files }}
-        run: |
-          for file in ${ALL_MODIFIED_FILES}; do
-            echo "File modified: $file"
-          done
+
 
   deploy-to-env:
     runs-on: ubuntu-latest

@@ -1,3 +1,3 @@
 foo bar baz
 
-          # MODIFIED_FILES_JSON=$(echo "[\"${ALL_MODIFIED_FILES//,/\",\"}\")
+# MODIFIED_FILES_JSON=$(echo "[\"${ALL_MODIFIED_FILES//,/\",\"}\")
