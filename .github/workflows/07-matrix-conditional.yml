@@ -29,18 +29,11 @@ jobs:
         run: |
           files=()
           for file in ${ALL_MODIFIED_FILES}; do
-            echo "File modified: $file"
-            file_name=$(echo "${file}" | sed 's:.*/::g' | sed 's:\.[^.]*$::g'
+            file_name=$(echo "${file}" | sed 's:.*/::g' | sed 's:\.[^.]*$::g')
             files+=("${file_name}")
           done
           files_json=$(printf '%s\n' "${files[@]}" | jq -R . | jq -s .)
           echo "pde_envs=$files_json" >> $GITHUB_OUTPUT
-
-          # FILE_NAMES=$(echo "${ALL_MODIFIED_FILES}" | sed 's:.*/::g' | sed 's:\.[^.]*$::g')
-          # MODIFIED_FILES_JSON=$(echo "[\"${ALL_MODIFIED_FILES//,/\",\"}\")
-          # echo "pde_envs=$MODIFIED_FILES_JSON" >> $GITHUB_OUTPUT
-
-
 
       - name: List modified files
         env:
