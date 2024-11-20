@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      pde-envs: ${{ steps.set-matrix.outputs.pde_envs }}
+      data-files: ${{ steps.set-matrix.outputs.data-files }}
 
     steps:
       - name: Checkout
@@ -24,22 +24,6 @@ jobs:
           files: |
             dummy/**
 
-      - name: Set matrix array
-        id: set-matrix
-        env:
-          ALL_MODIFIED_FILES: ${{ steps.changed-files.outputs.modified_files }}
-        run: |
-          filenames=()
-          for file in ${ALL_MODIFIED_FILES}; do
-            filename=$(basename "$file")
-            filename_without_ext="${filename%.*}"
-            filenames+=("$filename_without_ext")
-          done
-          filenames_json=$(echo "${filenames[@]}" | jq -Rc 'split(" ")')
-          echo $filenames_json
-          echo "pde_envs=$filenames_json" >> $GITHUB_OUTPUT
-
-
       - name: List modified files
         env:
           ALL_MODIFIED_FILES: ${{ steps.changed-files.outputs.modified_files }}
@@ -48,23 +32,28 @@ jobs:
             echo "File modified: $file"
           done
 
+      - name: Set matrix array
+        id: set-matrix
+        env:
+          ALL_MODIFIED_FILES: ${{ steps.changed-files.outputs.modified_files }}
+        run: |
+          MODIFIED_FILES_JSON=$(echo "[\"${ALL_MODIFIED_FILES//,/\",\"}\"]")
+          echo "data-files=$MODIFIED_FILES_JSON" >> $GITHUB_OUTPUT
+          echo $MODIFIED_FILES_JSON
+
   deploy-to-env:
     runs-on: ubuntu-latest
     needs: define-matrix
     continue-on-error: true
     strategy:
       matrix:
-        pde_env: ${{ fromJson(needs.define-matrix.outputs.pde-envs) }}
-        # env: [
-        #   dev: {PDE_ENV: dev, DATA_FILE: '${{ github.workspace }}/dummy/foo_dev.txt'},
-        #   test: {PDE_ENV: test, DATA_FILE: '${{ github.workspace }}/dummy/foo_test.txt'},
-        # ]
+        data_file: ${{ fromJson(needs.define-matrix.outputs.data-files) }}
 
     env:
       GHA_ENV: >
         ${{ 
-          matrix.pde_env == 'foo_dev' && 'dev' || 
-          matrix.pde_env == 'foo_test' && 'test' || 
+          matrix.data_file == 'dummy/foo_dev.txt' && 'dev' || 
+          matrix.data_file == 'dummy/foo_test.txt' && 'test' || 
           'unknown' 
         }}
     
@@ -75,5 +64,5 @@ jobs:
       
       - name: Echo env
         run: |
-          echo "PDE_ENV=${{ matrix.pde_env }}"
-          echo "GHA_ENV=${{ env.GHA_ENV }}"
+          echo "Data file: ${{ matrix.data_file }}"
+          echo "GHA_ENV: ${{ env.GHA_ENV }}"
