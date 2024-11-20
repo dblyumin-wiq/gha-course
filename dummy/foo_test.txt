@@ -1,1 +1,4 @@
 FILE_NAMES=$(echo "${ALL_MODIFIED_FILES}" | sed 's:.*/::g' | sed 's:\.[^.]*$::g'
+
+          MODIFIED_FILES_JSON=$(echo "[\"${ALL_MODIFIED_FILES//,/\",\"}\"]")
+          echo "pde_envs=$MODIFIED_FILES_JSON" >> $GITHUB_OUTPUT
