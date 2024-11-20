@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      pde_envs: ${{ steps.set-matrix.outputs.pde_envs }}
+      pde-envs: ${{ steps.set-matrix.outputs.pde_envs }}
 
     steps:
       - name: Checkout
@@ -52,17 +52,17 @@ jobs:
     continue-on-error: true
     strategy:
       matrix:
-        pde_env: ${{ fromJson(needs.define-matrix.outputs.pde_envs) }}
+        pde_env: ${{ fromJson(needs.define-matrix.outputs.pde-envs) }}
         # env: [
         #   dev: {PDE_ENV: dev, DATA_FILE: '${{ github.workspace }}/dummy/foo_dev.txt'},
         #   test: {PDE_ENV: test, DATA_FILE: '${{ github.workspace }}/dummy/foo_test.txt'},
         # ]
     
-    env:
-      params: |
+    env: 
+      deployments: |
         {
-          "foo_dev": "dev",
-          "foo_test": "test",
+          "foo_dev": {"gha_env": "dev"},
+          "foo_test": {"gha_env": "test"},
         }
 
     steps:
@@ -73,4 +73,4 @@ jobs:
       - name: Echo env
         run: |
           echo "PDE_ENV=${{ matrix.pde_env }}"
-          echo "ENV is: ${{ env.params.foo_dev}}"
+          echo "ENV is: ${{ env.deployments.foo_dev.gha_env}}"
