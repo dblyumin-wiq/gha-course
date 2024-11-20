@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      data-files: ${{ steps.set-matrix.outputs.data-files }}
+      envs: ${{ steps.set-matrix.outputs.envs }}
 
     steps:
       - name: Checkout
@@ -21,7 +21,6 @@ jobs:
         uses: tj-actions/changed-files@v45
         with:
           since_last_remote_commit: true
-          separator: ','
           files: |
             dummy/**
 
@@ -30,9 +29,15 @@ jobs:
         env:
           ALL_MODIFIED_FILES: ${{ steps.changed-files.outputs.modified_files }}
         run: |
-          MODIFIED_FILES_JSON=$(echo "[\"${ALL_MODIFIED_FILES//,/\",\"}\"]")
-          echo "data-files=$MODIFIED_FILES_JSON" >> $GITHUB_OUTPUT
-          echo $MODIFIED_FILES_JSON
+          filenames=()
+          for file in ${ALL_MODIFIED_FILES}; do
+            filename=$(basename "$file")
+            filename_without_ext="${filename%.*}"
+            filenames+=("$filename_without_ext")
+          done
+          filenames_json=$(echo "${filenames[@]}" | jq -Rc 'split(" ")')
+          echo $filenames_json
+          echo "envs=$filenames_json" >> $GITHUB_OUTPUT
 
   deploy-to-env:
     runs-on: ubuntu-latest
@@ -40,15 +45,10 @@ jobs:
     continue-on-error: true
     strategy:
       matrix:
-        data_file: ${{ fromJson(needs.define-matrix.outputs.data-files) }}
+        env_label: ${{ fromJson(needs.define-matrix.outputs.envs ) }}
 
     env:
-      GHA_ENV: >
-        ${{ 
-          matrix.data_file == 'dummy/foo_dev.txt' && 'dev' || 
-          matrix.data_file == 'dummy/foo_test.txt' && 'test' || 
-          'unknown' 
-        }}
+      GHA_ENV: '${{ matrix.env_label }}-scheduler'
     
     steps:
 
@@ -57,5 +57,5 @@ jobs:
       
       - name: Echo env
         run: |
-          echo "Data file: ${{ matrix.data_file }}"
+          echo "Data file: '${{ github.workspace }}/dummy/${{ matrix.env_label }}.txt"
           echo "${{ env.GHA_ENV }}"
