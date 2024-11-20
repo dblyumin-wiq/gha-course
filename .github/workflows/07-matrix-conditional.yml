@@ -21,16 +21,21 @@ jobs:
         uses: tj-actions/changed-files@v45
         with:
           since_last_remote_commit: true
-          separator: ','
 
       - name: Set matrix array
         id: set-matrix
         env:
           ALL_MODIFIED_FILES: ${{ steps.changed-files.outputs.modified_files }}
         run: |
-          MODIFIED_FILES_JSON=$(echo "[\"${ALL_MODIFIED_FILES//,/\",\"}\"]")
-          echo "pde_envs=$MODIFIED_FILES_JSON" >> $GITHUB_OUTPUT
-          echo $MODIFIED_FILES_JSON
+          filenames=()
+          for file in ${ALL_MODIFIED_FILES}; do
+            filename=$(basename "$file")
+            filename_without_ext="${filename%.*}"
+            filenames+=("$filename_without_ext")
+          done
+          filenames_json=$(echo "${filenames[@]}" | jq -R 'split(" ")')
+          echo $filenames_json
+          echo "pde_envs=${filenames_json}" >> "$GITHUB_OUTPUT"
 
 
       - name: List modified files
