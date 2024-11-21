@@ -1,3 +1,1 @@
 MODIFIED_FILES_JSON=$(echo "[\"${ALL_MODIFIED_FILES//,/\",\"}\")
-
-
