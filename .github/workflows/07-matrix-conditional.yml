@@ -1,6 +1,8 @@
 name: Matrix Conditional
 on:
   push:
+    branches: 
+      - main
     paths:
       - 'dummy/**.txt'
       # - '.github/workflows/07-matrix-conditional.yml'
