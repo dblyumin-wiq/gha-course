@@ -2,8 +2,8 @@ name: Matrix Conditional
 on:
   push:
     paths:
-      - 'dummy/**'
-      - '.github/workflows/07-matrix-conditional.yml'
+      - 'dummy/**.txt'
+      # - '.github/workflows/07-matrix-conditional.yml'
 
 jobs:
   define-matrix:
@@ -22,7 +22,7 @@ jobs:
         with:
           since_last_remote_commit: true
           files: |
-            dummy/**
+            dummy/**.txt
 
       - name: Set matrix array
         id: set-matrix
