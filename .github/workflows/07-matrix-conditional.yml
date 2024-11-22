@@ -24,7 +24,7 @@ jobs:
         # Use custom Marketplace action to get the list of changed files
         # Use the following options ('with' clause):
         # - Only consider changes since the last remote commit
-        # - Only monitor YAML files in the `config_data_files` directory
+        # - Only monitor YAML files in the `config_data_files` directory (note: no quotes around the glob pattern)
         id: changed-files
         uses: tj-actions/changed-files@v45
         with:
