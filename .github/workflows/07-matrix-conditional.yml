@@ -6,7 +6,7 @@ on:
     branches: 
       - main
     paths:
-      - 'config_data_files/*.yml'
+      - config_data_files/*.yml
 
 jobs:
   define-matrix:
@@ -30,7 +30,7 @@ jobs:
         with:
           since_last_remote_commit: true
           files: |
-            'config_data_files/*.yml'
+            config_data_files/*.yml
 
       - name: Set matrix array
         # Generate a JSON array of the filenames without the dir path and extension
